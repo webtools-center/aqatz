@@ -15,3 +15,7 @@ composer up
 vendor/bin/codecept build
 vendor/bin/codecept run
 ```
+
+## Примечание
+
+ТЗ выполнено в 2-х вариантах: Functional и Acceptance.

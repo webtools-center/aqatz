@@ -7,6 +7,9 @@ use Codeception\Util\HttpCode;
 
 final class UserRestApiCest
 {
+    /**
+     * Сценарий 6: Пример запроса API на создание нового пользователя
+     */
     public function createUser(AcceptanceTester $I)
     {
         $I->wantTo('create a new user via Yii2 REST API Controller');
@@ -15,7 +18,7 @@ final class UserRestApiCest
         $I->haveHttpHeader('Accept', 'application/json');
 
         $payload = [
-            'username' => 'apiUser' . time(),
+            'username' => 'apiUser' . bin2hex(random_bytes(4)),
             'password' => bin2hex(random_bytes(8)),
         ];
 

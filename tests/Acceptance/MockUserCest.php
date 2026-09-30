@@ -8,6 +8,10 @@ use app\tests\Support\AcceptanceTester;
 
 final class MockUserCest
 {
+    /**
+     * Сценарий 5: Пример хелпера, который перед тестом авторизации вставляет тестового пользователя
+     * напрямую в базу данных (без реального подключения к БД)
+     */
     public function checkMockUserWorking(AcceptanceTester $I)
     {
         $I->wantTo('check the mock user helper is working correctly');
