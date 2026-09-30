@@ -94,4 +94,37 @@ class User extends BaseObject implements IdentityInterface
     {
         return $this->authKey === $authKey;
     }
+
+    /**
+     * Find all users
+     */
+    public static function findAll(): array
+    {
+        $users = [];
+        foreach (self::$_users as $user) {
+            $users[] = new static($user);
+        }
+        return $users;
+    }
+
+    /**
+     * Create a new user
+     */
+    public static function createUser(string $username, string $password): static
+    {
+        $id = (string)(count(self::$_users) + 100);
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        $authKey = bin2hex(random_bytes(16));
+        $accessToken = bin2hex(random_bytes(16));
+
+        self::$_users[$id] = [
+            'id' => $id,
+            'username' => $username,
+            'passwordHash' => $passwordHash,
+            'authKey' => $authKey,
+            'accessToken' => $accessToken,
+        ];
+
+        return new static(self::$_users[$id]);
+    }
 }

@@ -8,11 +8,13 @@ actor: AcceptanceTester
 modules:
   enabled:
     - PhpBrowser:
-        url: http://localhost
+        url: http://localhost/
     - Yii2:
         part: orm
         entryScript: index-test.php
         cleanup: false
+    - Asserts
+    - app\tests\Support\Helper\MockUserHelper
 step_decorators: ~
 
 # webdriver configuration example

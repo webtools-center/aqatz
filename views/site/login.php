@@ -7,6 +7,7 @@
 
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
+use app\tests\Support\Page\LoginPage;
 
 $this->title = 'Login to your account';
 $this->params['breadcrumbs'][] = $this->title;
@@ -100,6 +101,14 @@ $labelOptions = ['class' => 'form-label fw-semibold small'];
                                 'class' => 'btn login-btn btn-lg rounded-3 text-white',
                                 'name' => 'login-button',
                             ],
+                        ) ?>
+                    </div>
+
+                    <div class="d-grid">
+                        <?= Html::a(
+                            'Restore password',
+                            LoginPage::getRestorePasswordRoute(),
+                            ['class' => 'mt-3 text-center']
                         ) ?>
                     </div>
 

@@ -5,60 +5,65 @@ declare(strict_types=1);
 namespace app\tests\Functional;
 
 use app\tests\Support\FunctionalTester;
+use app\tests\Support\Page\LoginPage;
+use yii\helpers\Url;
 
 final class LoginFormCest
 {
     public function _before(FunctionalTester $I)
     {
-        $I->amOnRoute('site/login');
+        $I->amOnRoute(Url::to(LoginPage::getRoute()));
     }
 
-    public function openLoginPage(FunctionalTester $I)
+    public function loginWithWrongCredentials(FunctionalTester $I)
     {
-        $I->see('Login', 'h1');
+        $I->amGoingTo('try to login with incorrect credentials');
+
+        $I->submitForm(LoginPage::getFormId(), [
+            LoginPage::getUsernameField() => 'admin',
+            LoginPage::getPasswordField() => 'wrong',
+        ]);
+
+        $I->expectTo('see authentication error');
+        $I->see('Incorrect username or password.');
     }
 
-    // demonstrates `amLoggedInAs` method
-    public function internalLoginById(FunctionalTester $I)
+    public function loginWithEmptyFields(FunctionalTester $I)
     {
-        $I->amLoggedInAs(100);
-        $I->amOnPage('/');
-        $I->see('Logout (admin)');
-    }
+        $I->amGoingTo('try to login with empty credentials');
 
-    // demonstrates `amLoggedInAs` method
-    public function internalLoginByInstance(FunctionalTester $I)
-    {
-        $I->amLoggedInAs(\app\models\User::findByUsername('admin'));
-        $I->amOnPage('/');
-        $I->see('Logout (admin)');
-    }
+        $I->submitForm(LoginPage::getFormId(), []);
 
-    public function loginWithEmptyCredentials(FunctionalTester $I)
-    {
-        $I->submitForm('#login-form', []);
         $I->expectTo('see validations errors');
         $I->see('Username cannot be blank.');
         $I->see('Password cannot be blank.');
     }
 
-    public function loginWithWrongCredentials(FunctionalTester $I)
+    public function ensurePasswordMasking(FunctionalTester $I)
     {
-        $I->submitForm('#login-form', [
-            'LoginForm[username]' => 'admin',
-            'LoginForm[password]' => 'wrong',
-        ]);
-        $I->expectTo('see validations errors');
-        $I->see('Incorrect username or password.');
+        $passwordInput = LoginPage::getPasswordInput();
+
+        $I->wantTo('Ensure that the password field masks the characters being entered');
+
+        $I->fillField($passwordInput, 'MyPassword');
+
+        $I->expect('that the password input field has the attribute type="password"');
+        $I->seeElement($passwordInput, ['type' => 'password']);
     }
 
-    public function loginSuccessfully(FunctionalTester $I)
+    /**
+     * Сценарий 4: Переход по ссылке «Забыли пароль»
+     */
+    public function forgotPasswordLinkTest(FunctionalTester $I)
     {
-        $I->submitForm('#login-form', [
-            'LoginForm[username]' => 'admin',
-            'LoginForm[password]' => 'admin',
-        ]);
-        $I->see('Logout (admin)');
-        $I->dontSeeElement('form#login-form');
+        $link = LoginPage::getRestorePasswordLink();
+
+        $I->wantTo('Check the password recovery link');
+
+        $I->seeElement($link);
+        $I->click($link);
+
+        $I->expect('that we have landed on the correct URL after navigation');
+        $I->seeInCurrentUrl(LoginPage::getRestorePasswordRoute());
     }
 }

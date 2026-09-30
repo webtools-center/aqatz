@@ -152,4 +152,14 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+    /**
+     * Displays restore password page.
+     *
+     * @return string
+     */
+    public function actionRestorePassword(): string
+    {
+        return $this->render('restore-password');
+    }
 }
