@@ -15,6 +15,9 @@ final class LoginFormCest
         $I->amOnRoute(Url::to(LoginPage::getRoute()));
     }
 
+    /**
+     * Сценарий 1: Вход с невалидными логином/паролем
+     */
     public function loginWithWrongCredentials(FunctionalTester $I)
     {
         $I->amGoingTo('try to login with incorrect credentials');
@@ -28,9 +31,12 @@ final class LoginFormCest
         $I->see('Incorrect username or password.');
     }
 
+    /**
+     * Сценарий 2: Пустые поля (кнопка «Войти» без ввода данных)
+     */
     public function loginWithEmptyFields(FunctionalTester $I)
     {
-        $I->amGoingTo('try to login with empty credentials');
+        $I->amGoingTo('try to login with empty fields');
 
         $I->submitForm(LoginPage::getFormId(), []);
 
@@ -39,6 +45,9 @@ final class LoginFormCest
         $I->see('Password cannot be blank.');
     }
 
+    /**
+     * Сценарий 3: Проверка маскировки пароля
+     */
     public function ensurePasswordMasking(FunctionalTester $I)
     {
         $passwordInput = LoginPage::getPasswordInput();

@@ -16,6 +16,9 @@ final class LoginCest
         $I->amOnPage(Url::to(LoginPage::getRoute()));
     }
 
+    /**
+     * Сценарий 1: Вход с невалидными логином/паролем
+     */
     public function loginWithWrongCredentials(AcceptanceTester $I)
     {
         $I->amGoingTo('try to login with incorrect credentials');
@@ -28,9 +31,12 @@ final class LoginCest
         $I->see('Incorrect username or password.');
     }
 
+    /**
+     * Сценарий 2: Пустые поля (кнопка «Войти» без ввода данных)
+     */
     public function loginWithEmptyFields(AcceptanceTester $I)
     {
-        $I->amGoingTo('try to login with incorrect credentials');
+        $I->amGoingTo('try to login with empty fields');
 
         $I->click('login-button');
 
@@ -39,6 +45,9 @@ final class LoginCest
         $I->see('Password cannot be blank.');
     }
 
+    /**
+     * Сценарий 3: Проверка маскировки пароля
+     */
     public function ensurePasswordMasking(AcceptanceTester $I)
     {
         $passwordInput = LoginPage::getPasswordInput();
@@ -65,24 +74,5 @@ final class LoginCest
 
         $I->expect('that we have landed on the correct URL after navigation');
         $I->seeInCurrentUrl(LoginPage::getRestorePasswordRoute());
-    }
-
-    public function checkMockUserWorking(AcceptanceTester $I)
-    {
-        $I->wantTo('check the mock user helper is working correctly');
-
-        $userId = 999;
-        $username = 'myusername';
-
-        $mockUser = $I->createMockUser([
-            'id' => $userId,
-            'username' => $username,
-            'password' => 'mypassword'
-        ]);
-
-        $dbUserId = $mockUser->findByUsername($username)?->getId();
-
-        $I->expect('that the mock user ID matches ID in the database');
-        $I->assertEquals($userId, $dbUserId);
     }
 }

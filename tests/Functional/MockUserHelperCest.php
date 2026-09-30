@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace app\tests\Functional;
 
-use app\models\User;
 use app\tests\Support\FunctionalTester;
 
-final class MockUserCest
+final class MockUserHelperCest
 {
     public function checkMockUserWorking(FunctionalTester $I)
     {
